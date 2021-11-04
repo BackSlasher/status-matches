@@ -18,7 +18,9 @@
     </style>
   </head>
   <body>
-    <p>Status matches!</p>
+    <p>Status matches! Double click on any edge to open relevant site
+
+    </p>
 
     <div id="mynetwork"></div>
 
@@ -30,37 +32,38 @@
       const graph = `
 
      digraph {
- // Parent nodes
- lines[label="LINES"];
- ahs[label="ARROW HEADS"];
 
- // Children nodes
- dot[label="both dot"];
- vee[label="back vee"];
- diamond[label="diamond and box"];
-
- // Line styles
- lines -- solid[label="solid pink", color="pink"];
- lines -- penwidth[label="penwidth=5", penwidth=5];
- lines -- dashed[label="dashed green", style="dashed", color="green"];
- lines -- dotted[label="dotted purple", style="dotted", color="purple"];
-
- // Arrowhead styles
- ahs -> box[label="box", arrowhead=box];
- ahs -> crow[label="crow", arrowhead=crow];
- ahs -> curve[label="curve", arrowhead=curve];
- ahs -> icurve[label="icurve", arrowhead=icurve];
- ahs -> normal[label="normal", arrowhead=normal];
- ahs -> inv[label="inv", arrowhead=inv];
- ahs -> diamond[label="diamond and box", dir=both, arrowhead=diamond, arrowtail=box];
- ahs -> dot[label="both dot", dir=both, arrowhead=dot, arrowtail=dot];
- ahs -> tee[label="tee", arrowhead=tee];
- ahs -> vee[label="back vee", dir=back, arrowtail=vee];
+ united -> marriott[title="https://marriottbonvoy.unitedmileageplus.com/"];
+ united -> hertz[title="https://www.hertzstatus.mileageplus.com/"];
 }
       `;
 
+
+    function href(label, link) {
+      const a = document.createElement("a");
+      a.href=link;
+      a.innerText=label;
+      return a;
+    }
+
+    function htmlTitle(html) {
+      const container = document.createElement("div");
+      container.innerHTML = html;
+      return container;
+    }
+
       const data = vis.parseDOTNetwork(graph);
       const network = new vis.Network(container, data, options);
+      network.on("doubleClick", function (params) {
+          if (params.edges.length == 1) {
+              const edgeName = params.edges[0];
+              const edge = data.edges.find(x=>x.id == edgeName);
+              const url = edge.title;
+                  if (url != undefined) {
+              window.open(url, '_blank');
+                        }
+          }
+      });
     </script>
   </body>
 </html>
